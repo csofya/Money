@@ -77,5 +77,3 @@ def from_mon_to_eng(mon):
         
 for i in range(0, 100):
     print(from_mon_to_eng(i))
-
-    # yq@markforged.com
