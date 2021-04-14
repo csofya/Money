@@ -3,7 +3,6 @@ $0 - $99
 input: 32
 output: Thirty two dollars
 '''
-
 import math
 
 numberones = {
@@ -54,60 +53,64 @@ def from_mon_to_eng(mon):
     if (mon == 0):
         return 'zero dollars'
         
+    ognum = 0   
     # first check if mon is a float or int
     # if mon has cents in it...
     if (isinstance(mon, int) == False):
-        cents = math.ceil((mon % 1) * 100)
-        # if (cents > )
-        if (cents > 9):
-            onescent = (cents % 10)
-            if (onescent == 0):
-                tenscent = math.ceil((cents - onescent) / 10)
-                tenscentstr = numbertens[tenscent]
-                totalcents = 'and ' + tenscentstr + ' cents'
-            else:
-                onescentstr = numberones[onescent]
-                tenscent = math.floor((cents - onescent) / 10)
-                tenscentstr = numbertens[tenscent]
-                totalcents = 'and ' + tenscentstr + ' ' + onescentstr + ' cents'
+        # last two digits will be cents
+        # I used floor, because sometimes when dividing, there's still a decimal
+        mon = math.floor(mon * 100)
+        onescent = mon % 10
+        # we can use the same dictionary for ones place
+        onescentstr = numberones[onescent] 
+        tenscent = ((mon - onescent) / 10) % 10
+        if (tenscent == 0):
+            totalcents = " and " + onescentstr + ' cents'
+        elif (tenscent == 1):
+            teenscent = teen[onescent]
+            totalcents = " and " + teenscent + ' cents'
         else:
-            onescent = math.floor(cents % 10)
-            onescentstr = numberones[onescent]
-            totalcents = 'and ' + onescentstr + ' cents'
+            tenscentstr = numbertens[tenscent]
+            totalcents = " and " + tenscentstr + ' ' + onescentstr + ' cents'
+        # in order to get the non-decimal number, we can keep track
+        # by subtracting the added cents and dividing by 100
+        ognum = (tenscent * 10) + onescent
+        mon = (mon - ognum)/100
     else:
         totalcents = ''
-    mon = mon - (mon % 1)
+
     # iterate through each number
     ones = mon % 10 
-    
-    if (ones == 0):
-        onestring = ''
-    else:
-        # get the value from ones dictionary
+   
+    # get the value from ones dictionary
+    if ones in numberones:
         onestring = numberones[ones] 
-    
+    else:
+        onestring = ''
     # get the tens digit through arithmetic
     tens = (mon - ones) / 10
 
     if tens in numbertens:
         tensstring = numbertens[tens] # last is 3, value is three
-        result = tensstring + ' ' + onestring + ' dollars ' + totalcents
+        result = tensstring + ' ' + onestring + ' dollars' + totalcents
         
     # else if the tens digit is one, go the teens dicionary
     elif tens == 1:
         teenstring = teen[ones]
-        result = teenstring + ' dollars ' + totalcents 
+        result = teenstring + ' dollars' + totalcents
     
     # if there is only one digit, just print the ones string
     else: 
-        result = onestring + ' dollars ' + totalcents 
+        result = onestring + ' dollars' + totalcents
         
     return result
-    
+
 print(from_mon_to_eng(91.92)) 
 print(from_mon_to_eng(82)) 
 print(from_mon_to_eng(13.02)) 
 print(from_mon_to_eng(80.76)) 
+print(from_mon_to_eng(36.16)) 
+print(from_mon_to_eng(10.99)) 
 
 # for i in range(0, 100):
 #     print(from_mon_to_eng(i))
