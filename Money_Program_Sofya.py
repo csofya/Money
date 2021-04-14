@@ -61,17 +61,21 @@ def from_mon_to_eng(mon):
         # I used floor, because sometimes when dividing, there's still a decimal
         mon = math.floor(mon * 100)
         onescent = mon % 10
+        if onescent in numberones:
         # we can use the same dictionary for ones place
-        onescentstr = numberones[onescent] 
-        tenscent = ((mon - onescent) / 10) % 10
-        if (tenscent == 0):
-            totalcents = " and " + onescentstr + ' cents'
-        elif (tenscent == 1):
-            teenscent = teen[onescent]
-            totalcents = " and " + teenscent + ' cents'
-        else:
-            tenscentstr = numbertens[tenscent]
-            totalcents = " and " + tenscentstr + ' ' + onescentstr + ' cents'
+            onescentstr = numberones[onescent] 
+            tenscent = ((mon - onescent) / 10) % 10
+            if (tenscent == 0):
+                totalcents = ' and ' + onescentstr + ' cents'
+            elif (tenscent == 1):
+                teenscent = teen[onescent]
+                totalcents = ' and ' + teenscent + ' cents'
+            else:
+                tenscentstr = numbertens[tenscent]
+                totalcents = ' and ' + tenscentstr + ' ' + onescentstr + ' cents'
+        elif onescent == 0:
+            tenscent = 1
+            totalcents =  ' and ten cents'
         # in order to get the non-decimal number, we can keep track
         # by subtracting the added cents and dividing by 100
         ognum = (tenscent * 10) + onescent
